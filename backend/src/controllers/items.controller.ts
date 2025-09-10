@@ -20,8 +20,8 @@ export const itemsController = {
   },
 
   create: async (req: Request, res: Response) => {
-    const { name, price, category } = req.body;
-    const item = await itemsService.create({ name, price, category });
+    const { name, price, category, image } = req.body;
+    const item = await itemsService.create({ name, price, category, image });
     res.status(201).json(item);
   },
 

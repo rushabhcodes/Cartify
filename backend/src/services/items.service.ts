@@ -26,13 +26,13 @@ export const itemsService = {
         return prisma.item.findUnique({ where: { id } });
     },
 
-    async create(data: { name: string; price: number; category: string }) {
+    async create(data: { name: string; price: number; category: string; image?: string }) {
         return prisma.item.create({ data });
     },
 
     async update(
         id: number,
-        data: Partial<{ name: string; price: number; category: string }>
+        data: Partial<{ name: string; price: number; category: string; image: string }>
     ) {
         return prisma.item.update({ where: { id }, data });
     },

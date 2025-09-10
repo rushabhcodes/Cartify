@@ -23,10 +23,10 @@ export const itemsApi = {
   getById: (id: number): Promise<Item> => 
     api.get(`/items/${id}`).then(res => res.data),
   
-  create: (data: { name: string; price: number; category: string }): Promise<Item> => 
+  create: (data: { name: string; price: number; category: string; image?: string }): Promise<Item> => 
     api.post('/items', data).then(res => res.data),
   
-  update: (id: number, data: Partial<{ name: string; price: number; category: string }>): Promise<Item> => 
+  update: (id: number, data: Partial<{ name: string; price: number; category: string; image: string }>): Promise<Item> => 
     api.put(`/items/${id}`, data).then(res => res.data),
   
   delete: (id: number): Promise<void> => 

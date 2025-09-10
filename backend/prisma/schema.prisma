@@ -19,6 +19,7 @@ model Item {
   name     String
   price    Float
   category String
+  image    String? // Optional image URL
   Cart     Cart[]
 }
 
