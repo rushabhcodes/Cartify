@@ -5,7 +5,7 @@ import morgan from "morgan";
 import { swaggerDocs } from "./swagger";
 import authRoutes from "./routes/auth.routes";
 import itemsRoutes from "./routes/items.routes";
-// import cartRoutes from "./routes/cart.routes.js";
+import cartRoutes from "./routes/cart.routes";
 import errorHandler from "./middleware/errorHandler";
 
 const app = express();
@@ -17,7 +17,7 @@ app.use(morgan("dev"));
 // API versioning prefix (good for future)
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/items", itemsRoutes);
-// app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/cart", cartRoutes);
 
 // swagger docs
 swaggerDocs(app);
