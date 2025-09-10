@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/dist/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["backend/node_modules/**", "backend/prisma/**"]
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "backend/dist/index.js"
+    }
+  ],
+  "installCommand": "cd backend && pnpm install",
+  "buildCommand": "cd backend && pnpm run prebuild && pnpm run build"
+}

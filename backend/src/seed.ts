@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { prisma } from './config';
 import { sampleItems } from './data/sampleData';
-
-const prisma = new PrismaClient();
 
 async function main() {
   console.log('🌱 Seeding database with sample items...');
