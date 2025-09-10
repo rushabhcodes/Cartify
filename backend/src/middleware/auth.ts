@@ -14,8 +14,15 @@ export default function auth(req: Request, res: Response, next: NextFunction) {
   if (!token) return res.status(401).json({ error: "Invalid Authorization header" });
   try {
     const payload = verifyToken<UserPayload>(token);
-    req.user = payload; // at minimum { id, email }
+    if (
+    typeof payload === "object" &&
+    payload !== null &&
+    "id" in payload &&
+    "email" in payload
+  ) {
+    req.user = payload as UserPayload;
     next();
+  }
   } catch (e) {
     return res.status(401).json({ error: "Invalid or expired token" });
   }
