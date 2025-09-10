@@ -176,7 +176,7 @@ export function ProductsPage() {
                     <Input
                       id="maxPrice"
                       type="number"
-                      placeholder="1000"
+                      placeholder="10000"
                       value={filters.maxPrice || ''}
                       onChange={(e) => 
                         handleFilterChange('maxPrice', e.target.value ? Number(e.target.value) : undefined)

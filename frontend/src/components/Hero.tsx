@@ -61,7 +61,7 @@ export function Hero() {
                 </div>
                 <div>
                   <h4 className="font-semibold">Free Shipping</h4>
-                  <p className="text-sm text-muted-foreground">On orders over $50</p>
+                  <p className="text-sm text-muted-foreground">On orders over ₹500</p>
                 </div>
               </div>
               

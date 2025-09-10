@@ -6,6 +6,7 @@ import { Badge } from './ui/badge';
 import { Heart, ShoppingCart, Star } from 'lucide-react';
 import { useAuthStore, useCartStore } from '../store';
 import { cartApi } from '../lib/api';
+import { formatPriceCompact } from '../lib/currency';
 import type { Item } from '../types';
 import { cn } from '../lib/utils';
 
@@ -16,6 +17,7 @@ interface ProductCardProps {
 
 export function ProductCard({ item, className }: ProductCardProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const { isAuthenticated } = useAuthStore();
   const { addToLocalCart } = useCartStore();
   const queryClient = useQueryClient();
@@ -40,26 +42,29 @@ export function ProductCard({ item, className }: ProductCardProps) {
     }
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
-  };
-
   return (
     <Card className={cn("group hover:shadow-lg transition-all duration-300 overflow-hidden", className)}>
       <CardContent className="p-0">
         <div className="relative aspect-square overflow-hidden bg-muted">
-          {item.image ? (
-            <img
-              src={item.image}
-              alt={item.name}
-              className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
-            />
+          {item.image && !imageError ? (
+            <>
+              <img
+                src={item.image}
+                alt={item.name}
+                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+                onError={() => setImageError(true)}
+                onLoad={() => setImageError(false)}
+                loading="lazy"
+              />
+            </>
           ) : (
-            <div className="flex items-center justify-center w-full h-full">
-              <ShoppingCart className="h-16 w-16 text-muted-foreground" />
+            <div className="flex items-center justify-center w-full h-full bg-gradient-to-br from-muted to-muted/50">
+              <div className="text-center space-y-2">
+                <ShoppingCart className="h-12 w-12 text-muted-foreground mx-auto" />
+                <p className="text-xs text-muted-foreground px-2">
+                  {imageError ? 'Image not available' : 'No Image'}
+                </p>
+              </div>
             </div>
           )}
           
@@ -91,7 +96,7 @@ export function ProductCard({ item, className }: ProductCardProps) {
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="text-2xl font-bold text-primary">
-                {formatPrice(item.price)}
+                {formatPriceCompact(item.price)}
               </div>
               
               {/* Rating - placeholder for future */}
