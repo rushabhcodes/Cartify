@@ -10,7 +10,18 @@ import errorHandler from "./middleware/errorHandler";
 
 const app = express();
 app.use(helmet());
-app.use(cors());
+// CORS: allow requests from any origin
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  })
+);
+// Handle preflight for all routes
+app.options("*", cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
