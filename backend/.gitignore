@@ -13,7 +13,7 @@ build/
 coverage/
 
 # Other env files
-.env.*
+.env
 
 # Prisma local DB (if using SQLite)
 prisma/dev.db

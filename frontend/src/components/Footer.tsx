@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 import { Separator } from './ui/separator';
 import { 
   Package, 
-  Mail, 
-  Phone, 
+  Mail,
   MapPin, 
   Github,
   Linkedin,

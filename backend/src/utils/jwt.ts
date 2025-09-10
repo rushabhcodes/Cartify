@@ -1,9 +1,10 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import { config } from "../config";
 
-const SECRET = process.env.JWT_SECRET as string;
+const SECRET = config.jwtSecret;
 
-if (!SECRET) {
-  throw new Error("Missing JWT_SECRET in environment variables");
+if (!SECRET || SECRET === 'fallback_secret') {
+  throw new Error("Missing or invalid JWT_SECRET in environment variables");
 }
 
 export function signToken(
