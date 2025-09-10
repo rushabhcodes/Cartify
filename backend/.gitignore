@@ -1,0 +1,25 @@
+/node_modules
+.npmrc
+.env
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+
+# Test coverage
+coverage/
+
+# Other env files
+.env.*
+
+# Prisma local DB (if using SQLite)
+prisma/dev.db
+
+# macOS system files
+.DS_Store
+
+# TypeScript build info
+*.tsbuildinfo
