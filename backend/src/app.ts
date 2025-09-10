@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import { swaggerDocs } from "./swagger";
+import { config } from "./config";
 import authRoutes from "./routes/auth.routes";
 import itemsRoutes from "./routes/items.routes";
 import cartRoutes from "./routes/cart.routes";
@@ -10,10 +11,10 @@ import errorHandler from "./middleware/errorHandler";
 
 const app = express();
 app.use(helmet());
-// CORS: allow requests from any origin
+// CORS: allow requests only from configured frontend URL
 app.use(
   cors({
-    origin: "*",
+  origin: config.frontendUrl,
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     preflightContinue: false,
