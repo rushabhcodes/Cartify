@@ -15,6 +15,15 @@ export const cartController = {
     res.status(201).json(item);
   },
 
+  updateQuantity: async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+    const itemId = Number(req.params.itemId);
+    const { quantity } = req.body;
+    const updated = await cartService.updateQuantity(userId, itemId, quantity);
+    if (!updated) return res.status(404).json({ error: "Item not in cart" });
+    res.json(updated);
+  },
+
   removeItem: async (req: Request, res: Response) => {
     const userId = req.user!.id;
     const itemId = Number(req.params.itemId);

@@ -32,6 +32,14 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     },
   });
 
+  const updateQuantityMutation = useMutation({
+    mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
+      cartApi.updateQuantity(itemId, quantity),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
+    },
+  });
+
   const clearCartMutation = useMutation({
     mutationFn: cartApi.clearCart,
     onSuccess: () => {
@@ -44,6 +52,22 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       removeItemMutation.mutate(itemId);
     } else {
       removeFromLocalCart(itemId);
+    }
+  };
+
+  const handleIncreaseQuantity = (itemId: number, currentQuantity: number) => {
+    if (isAuthenticated) {
+      updateQuantityMutation.mutate({ itemId, quantity: currentQuantity + 1 });
+    }
+  };
+
+  const handleDecreaseQuantity = (itemId: number, currentQuantity: number) => {
+    if (isAuthenticated) {
+      if (currentQuantity <= 1) {
+        removeItemMutation.mutate(itemId);
+      } else {
+        updateQuantityMutation.mutate({ itemId, quantity: currentQuantity - 1 });
+      }
     }
   };
 
@@ -65,8 +89,8 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
   return (
     <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-lg">
-        <SheetHeader>
+      <SheetContent className="w-full sm:max-w-lg p-6">
+        <SheetHeader className="pb-4">
           <SheetTitle className="flex items-center gap-2">
             <ShoppingBag className="h-5 w-5" />
             Shopping Cart
@@ -77,21 +101,21 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         </SheetHeader>
 
         {(cartItems.length === 0 && localCart.length === 0) ? (
-          <div className="flex flex-col items-center justify-center h-[60vh] space-y-4">
+          <div className="flex flex-col items-center justify-center h-[60vh] space-y-4 px-4">
             <ShoppingBag className="h-16 w-16 text-muted-foreground" />
             <h3 className="text-lg font-medium">Your cart is empty</h3>
             <p className="text-sm text-muted-foreground text-center">
               Add some items to get started
             </p>
-            <Button onClick={onClose}>Continue Shopping</Button>
+            <Button onClick={onClose} className="mt-4">Continue Shopping</Button>
           </div>
         ) : (
           <div className="flex flex-col h-full">
             <ScrollArea className="flex-1 pr-4">
-              <div className="space-y-4 py-4">
+              <div className="space-y-4 py-4 px-2">
                 {/* Server Cart Items */}
                 {cartItems.map((item: CartItem) => (
-                  <div key={item.id} className="flex items-center space-x-4 py-2">
+                  <div key={item.id} className="flex items-center space-x-4 py-3 px-3 bg-muted/30 rounded-lg">
                     <div className="h-16 w-16 bg-muted rounded-md flex items-center justify-center">
                       {item.item.image ? (
                         <img 
@@ -119,15 +143,18 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
-                          disabled={removeItemMutation.isPending}
+                          onClick={() => handleDecreaseQuantity(item.itemId, item.quantity)}
+                          disabled={removeItemMutation.isPending || updateQuantityMutation.isPending}
                         >
                           <Minus className="h-4 w-4" />
                         </Button>
-                        <span className="w-8 text-center text-sm">{item.quantity}</span>
+                        <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
                         <Button
                           variant="outline"
                           size="icon"
                           className="h-8 w-8"
+                          onClick={() => handleIncreaseQuantity(item.itemId, item.quantity)}
+                          disabled={updateQuantityMutation.isPending}
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
@@ -147,7 +174,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
                 {/* Local Cart Items (for non-authenticated users) */}
                 {!isAuthenticated && localCart.map((item) => (
-                  <div key={item.itemId} className="flex items-center space-x-4 py-2">
+                  <div key={item.itemId} className="flex items-center space-x-4 py-3 px-3 bg-muted/30 rounded-lg">
                     <div className="h-16 w-16 bg-muted rounded-md flex items-center justify-center">
                       <ShoppingBag className="h-8 w-8 text-muted-foreground" />
                     </div>
@@ -170,10 +197,10 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
               </div>
             </ScrollArea>
 
-            <div className="space-y-4 pt-4 border-t">
+            <div className="space-y-4 pt-6 border-t px-2">
               {isAuthenticated && cartItems.length > 0 && (
                 <>
-                  <div className="flex justify-between items-center">
+                  <div className="flex justify-between items-center px-2">
                     <span className="font-medium">Total</span>
                     <span className="font-bold text-lg">${totalPrice.toFixed(2)}</span>
                   </div>
@@ -181,7 +208,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </>
               )}
               
-              <div className="space-y-2">
+              <div className="space-y-3 px-2">
                 {totalItems > 0 && (
                   <Button
                     variant="outline"

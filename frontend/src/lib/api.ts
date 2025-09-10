@@ -40,6 +40,9 @@ export const cartApi = {
   addItem: (data: CartItemInput): Promise<CartItem> => 
     api.post('/cart', data).then(res => res.data),
   
+  updateQuantity: (itemId: number, quantity: number): Promise<CartItem> => 
+    api.put(`/cart/${itemId}`, { quantity }).then(res => res.data),
+  
   removeItem: (itemId: number): Promise<void> => 
     api.delete(`/cart/${itemId}`).then(res => res.data),
   

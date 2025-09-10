@@ -57,6 +57,39 @@ router.post("/", auth, asyncHandler(cartController.addItem));
 /**
  * @swagger
  * /api/v1/cart/{itemId}:
+ *   put:
+ *     summary: Update quantity of an item in cart
+ *     tags: [Cart]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: itemId
+ *         required: true
+ *         schema:
+ *           type: number
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - quantity
+ *             properties:
+ *               quantity:
+ *                 type: number
+ *     responses:
+ *       200:
+ *         description: Cart item updated
+ *       404:
+ *         description: Item not found
+ */
+router.put("/:itemId", auth, asyncHandler(cartController.updateQuantity));
+
+/**
+ * @swagger
+ * /api/v1/cart/{itemId}:
  *   delete:
  *     summary: Remove an item from cart
  *     tags: [Cart]

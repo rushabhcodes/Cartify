@@ -23,11 +23,32 @@ export const cartService = {
       return prisma.cart.update({
         where: { id: existing.id },
         data: { quantity: existing.quantity + quantity },
+        include: { item: true },
       });
     }
 
     return prisma.cart.create({
       data: { userId, itemId, quantity },
+      include: { item: true },
+    });
+  },
+
+  async updateQuantity(userId: number, itemId: number, quantity: number) {
+    const existing = await prisma.cart.findFirst({
+      where: { userId, itemId },
+    });
+
+    if (!existing) return null;
+
+    if (quantity <= 0) {
+      await prisma.cart.delete({ where: { id: existing.id } });
+      return null;
+    }
+
+    return prisma.cart.update({
+      where: { id: existing.id },
+      data: { quantity },
+      include: { item: true },
     });
   },
 
