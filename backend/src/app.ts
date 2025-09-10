@@ -20,8 +20,6 @@ app.use(
     optionsSuccessStatus: 204,
   })
 );
-// Handle preflight for all routes
-app.options("*", cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
